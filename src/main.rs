@@ -1,9 +1,11 @@
 #![feature(slice_patterns)]
 #[macro_use]
 extern crate clap;
+extern crate biot;
 
 use clap::{App, SubCommand};
 use std::process::exit;
+use biot::pattern_count;
 
 fn main() {
     let yaml = load_yaml!("../cli.yml");
@@ -24,18 +26,4 @@ fn main() {
         },
         _ => exit(0)
     }
-}
-
-
-pub fn pattern_count(text: &str, pattern: &str) -> i32 {
-    let mut count: i32 = 0;
-
-    for i in 0..(text.len() - pattern.len() + 1) {
-        let slice = &text[i..(i + pattern.len())];
-        if slice == pattern {
-            count += 1;
-        }
-    }
-
-    return count;
 }
