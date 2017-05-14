@@ -23,7 +23,6 @@ pub fn frequent_words(text: &str, k: usize) -> Vec<&str> {
         }
     }
 
-    println!("{:?}", frequents);
     return frequents;
 }
 
@@ -45,5 +44,10 @@ mod frequent_words_test {
     #[test]
     fn it_returns_most_frequent_letter() {
         assert!(frequent_words("aba", 1) == vec!["a"])
+    }
+
+    #[test]
+    fn it_returns_multiple_frequent_words() {
+        assert!(frequent_words("abcabca", 2) == vec!["ab", "bc", "ca"])
     }
 }
