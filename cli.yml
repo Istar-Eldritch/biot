@@ -1,0 +1,19 @@
+name: biot
+version: "0.1"
+author: Ruben Paz <me@ruben.io>
+about: Utility functions for bioinformatics
+subcommands:
+  - count:
+      about: test if subcommands work
+      args:
+        - text:
+            short: t
+            help: The text in which we find the pattern
+            required: true
+            takes_value: true
+
+        - pattern:
+            short: p
+            help: The pattern to find
+            required: true
+            takes_value: true

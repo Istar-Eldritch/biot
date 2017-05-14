@@ -1,0 +1,7 @@
+[package]
+name = "biot"
+version = "0.1.0"
+authors = ["Ruben Paz <me@ruben.io>"]
+
+[dependencies]
+clap = { features = ["yaml"] }
