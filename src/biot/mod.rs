@@ -1,3 +1,3 @@
-mod basic;
+mod pattern_count;
 
-pub use self::basic::*;
+pub use self::pattern_count::*;
