@@ -28,7 +28,7 @@ pub fn frequent_words(text: &str, k: usize) -> Vec<String> {
 
 pub fn freq_array_words(text: &str, k: usize) -> Vec<String> {
     let mut frequents: Vec<String> = vec!();
-    if text.len() > k {
+    if k > 0 && text.len() >= k {
         let freqs = freq_array(text, k as u32);
         let max_count = freqs.iter().max().unwrap();
         for i in 0..(4usize.pow(k as u32) - 1) {
@@ -41,12 +41,42 @@ pub fn freq_array_words(text: &str, k: usize) -> Vec<String> {
     frequents
 }
 
+pub fn sort_frequent_words(text: &str, k: usize) -> Vec<String> {
+    let mut frequents: Vec<String> = vec!();
+    if k > 0 && text.len() >= k {
+        let mut index: Vec<i32> = vec!();
+        let mut count: Vec<i32> = vec!(1; text.len() - 1);
+
+        for i in 0..text.len() - k + 1 {
+            let pattern = &text[i..(i + k)];
+            index.push(pattern_to_number(pattern) as i32);
+        }
+        index.sort();
+        for i in 1..index.len() {
+            if index[i] == index[i - 1] {
+                count[i] = count[i - 1] + 1;
+            }
+        }
+
+        let max = count.iter().max().unwrap();
+        for i in 0..count.len() {
+            if &count[i] == max {
+                let pattern = number_to_pattern(index[i] as usize, k);
+                frequents.push(pattern);
+            }
+        }
+    }
+
+    frequents
+}
+
 fn freq_array(text: &str, k: u32) -> Vec<i32> {
     let mut frequency = vec![0; 4usize.pow(k)];
     for i in 0..(text.len() - 1) {
         let num = pattern_to_number(&text[i..i + k as usize]);
         frequency[num] += 1;
     }
+
     frequency
 }
 
@@ -148,6 +178,31 @@ mod symbol_to_number_test {
         assert!(symbol_to_number('G') == 2);
         assert!(symbol_to_number('T') == 3);
 
+    }
+}
+
+#[cfg(test)]
+mod sort_frequent_words_test {
+    use super::sort_frequent_words;
+
+    #[test]
+    fn it_returns_empty_on_k_0() {
+        assert!(sort_frequent_words("atcg", 0) == vec![] as Vec<&str>)
+    }
+
+    #[test]
+    fn it_returns_empty_on_text_len_0() {
+        assert!(sort_frequent_words("", 3) == vec![] as Vec<&str>)
+    }
+
+    #[test]
+    fn it_returns_most_frequent_letter() {
+        assert!(sort_frequent_words("ata", 1) == vec!["A"])
+    }
+
+    #[test]
+    fn it_returns_multiple_frequent_words() {
+        assert!(sort_frequent_words("atcatca", 2) == vec!["AT", "CA", "TC"])
     }
 }
 
