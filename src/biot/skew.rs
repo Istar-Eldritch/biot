@@ -11,7 +11,7 @@ pub fn skew(genome: &str) -> Vec<i32> {
                 match a {
                     'C' => result.push(prev - 1),
                     'G' => result.push(prev + 1),
-                    _ => result.push(prev.clone())
+                    _ => result.push(prev)
                 }
             },
             None => break
