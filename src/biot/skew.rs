@@ -1,4 +1,16 @@
 
+pub fn min_skew(genome: &str) -> Vec<i32> {
+    let mut result: Vec<i32> = vec!();
+    let skew_result = skew(&genome);
+    let min = skew_result.iter().min().unwrap();
+    for i in 0..skew_result.len() {
+        if &skew_result[i] == min {
+            result.push(i as i32);
+        }
+    }
+    result
+}
+
 pub fn skew(genome: &str) -> Vec<i32> {
     let mut result = vec!();
     result.push(0);

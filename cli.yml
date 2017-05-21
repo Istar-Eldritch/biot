@@ -20,8 +20,8 @@ subcommands:
   - skew:
       about: computes skew of string
       args:
-        - text:
-            short: t
-            help: The text
+        - file:
+            short: f
+            help: The file containing the text
             required: true
             takes_value: true

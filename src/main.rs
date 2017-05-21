@@ -3,9 +3,13 @@
 extern crate clap;
 extern crate biot;
 
+use std::fs::File;
+use std::path::Path;
+use std::io::BufReader;
+use std::io::prelude::*;
 use clap::{App, SubCommand};
 use std::process::exit;
-use biot::{pattern_count, skew};
+use biot::{pattern_count, min_skew};
 
 fn main() {
     let yaml = load_yaml!("../cli.yml");
@@ -22,9 +26,25 @@ fn main() {
                     println!("{}", pattern_count(&text_string, &pattern_string));
                 },
                 "skew" => {
-                    let text = &matches.args["text"].vals[0];
-                    let text_string = text.to_str().unwrap();
-                    println!("{:?}", skew(&text_string));
+
+                    let file = &matches.args["file"].vals[0];
+                    let file_path: &str = file.to_str().unwrap();
+                    let path = Path::new(file_path);
+                    let display = path.display();
+
+                    let file = match File::open(&path) {
+                        // The `description` method of `io::Error` returns a string that
+                        // describes the error
+                        Err(_) => panic!("couldn't open {}", display),
+                        Ok(file) => file,
+                    };
+
+                    let mut buf_reader = BufReader::new(file);
+                    let mut contents = String::new();
+                    match buf_reader.read_to_string(&mut contents) {
+                        Err(_) => panic!("couldn't read {}", display),
+                        Ok(_) => println!("{:?}", min_skew(&contents))
+                    }
                 },
                 _ => exit(0)
             },
