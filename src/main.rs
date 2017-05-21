@@ -5,7 +5,7 @@ extern crate biot;
 
 use clap::{App, SubCommand};
 use std::process::exit;
-use biot::pattern_count;
+use biot::{pattern_count, skew};
 
 fn main() {
     let yaml = load_yaml!("../cli.yml");
@@ -20,6 +20,11 @@ fn main() {
                     let pattern = &matches.args["pattern"].vals[0];
                     let pattern_string = pattern.to_str().unwrap();
                     println!("{}", pattern_count(&text_string, &pattern_string));
+                },
+                "skew" => {
+                    let text = &matches.args["text"].vals[0];
+                    let text_string = text.to_str().unwrap();
+                    println!("{:?}", skew(&text_string));
                 },
                 _ => exit(0)
             },

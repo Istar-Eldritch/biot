@@ -17,3 +17,11 @@ subcommands:
             help: The pattern to find
             required: true
             takes_value: true
+  - skew:
+      about: computes skew of string
+      args:
+        - text:
+            short: t
+            help: The text
+            required: true
+            takes_value: true
