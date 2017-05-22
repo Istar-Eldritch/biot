@@ -11,6 +11,18 @@ pub fn min_skew(genome: &str) -> Vec<i32> {
     result
 }
 
+pub fn max_skew(genome: &str) -> Vec<i32> {
+    let mut result: Vec<i32> = vec!();
+    let skew_result = skew(&genome);
+    let max = skew_result.iter().max().unwrap();
+    for i in 0..skew_result.len() {
+        if &skew_result[i] == max {
+            result.push(i as i32);
+        }
+    }
+    result
+}
+
 pub fn skew(genome: &str) -> Vec<i32> {
     let mut result = vec!();
     result.push(0);

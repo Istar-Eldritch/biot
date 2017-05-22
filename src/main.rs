@@ -9,7 +9,7 @@ use std::io::BufReader;
 use std::io::prelude::*;
 use clap::{App, SubCommand};
 use std::process::exit;
-use biot::{pattern_count, min_skew};
+use biot::{pattern_count, min_skew, hamming_distance};
 
 fn main() {
     let yaml = load_yaml!("../cli.yml");
@@ -24,6 +24,27 @@ fn main() {
                     let pattern = &matches.args["pattern"].vals[0];
                     let pattern_string = pattern.to_str().unwrap();
                     println!("{}", pattern_count(&text_string, &pattern_string));
+                },
+                "hamming_distance" => {
+                    let file = &matches.args["file"].vals[0];
+                    let file_path: &str = file.to_str().unwrap();
+                    let path = Path::new(file_path);
+                    let display = path.display();
+
+                    let file = match File::open(&path) {
+                        // The `description` method of `io::Error` returns a string that
+                        // describes the error
+                        Err(_) => panic!("couldn't open {}", display),
+                        Ok(file) => file,
+                    };
+
+                    let buf_reader = BufReader::new(file);
+
+                    let mut lines = buf_reader.lines();
+                    let t1 = lines.next().unwrap().unwrap();
+                    let t2 = lines.next().unwrap().unwrap();
+
+                    println!("{}", hamming_distance(&t1, &t2));
                 },
                 "skew" => {
 

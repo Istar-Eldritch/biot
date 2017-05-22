@@ -17,6 +17,13 @@ subcommands:
             help: The pattern to find
             required: true
             takes_value: true
+  - hamming_distance:
+      about: test if subcommands work
+      args:
+        - file:
+            short: f
+            required: true
+            takes_value: true
   - skew:
       about: computes skew of string
       args:
