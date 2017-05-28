@@ -6,6 +6,12 @@ subcommands:
   - count:
       about: test if subcommands work
       args:
+        - distance:
+            short: d
+            help: The margin of error to match the pattern
+            required: false
+            takes_value: true
+
         - text:
             short: t
             help: The text in which we find the pattern
@@ -17,6 +23,7 @@ subcommands:
             help: The pattern to find
             required: true
             takes_value: true
+
   - hamming_distance:
       about: test if subcommands work
       args:
@@ -27,6 +34,11 @@ subcommands:
   - skew:
       about: computes skew of string
       args:
+        - type:
+            short: t
+            help: The type of skew
+            required: true
+            takes_value: true
         - file:
             short: f
             help: The file containing the text

@@ -9,7 +9,7 @@ use std::io::BufReader;
 use std::io::prelude::*;
 use clap::{App, SubCommand};
 use std::process::exit;
-use biot::{pattern_count, min_skew, hamming_distance};
+use biot::*;
 
 fn main() {
     let yaml = load_yaml!("../cli.yml");
@@ -23,7 +23,15 @@ fn main() {
                     let text_string = text.to_str().unwrap();
                     let pattern = &matches.args["pattern"].vals[0];
                     let pattern_string = pattern.to_str().unwrap();
-                    println!("{}", pattern_count(&text_string, &pattern_string));
+                    let distance = match matches.value_of("distance") {
+                        Some(n) => match n.parse() {
+                            Ok(n) => n,
+                            Err(_) => panic!("\"{}\" is not a valid number", n)
+                        },
+                        None => 0
+                    };
+
+                    println!("{}", approx_pattern_count(&text_string, &pattern_string, distance));
                 },
                 "hamming_distance" => {
                     let file = &matches.args["file"].vals[0];
@@ -49,6 +57,13 @@ fn main() {
                 "skew" => {
 
                     let file = &matches.args["file"].vals[0];
+                    let t = &matches.args["type"].vals[0];
+                    let f = match t.to_str().unwrap() {
+                        "max" => max_skew,
+                        "min" => min_skew,
+                        _ => panic!("Only types \"min\" and \"max\" are valid")
+                    };
+
                     let file_path: &str = file.to_str().unwrap();
                     let path = Path::new(file_path);
                     let display = path.display();
@@ -64,7 +79,7 @@ fn main() {
                     let mut contents = String::new();
                     match buf_reader.read_to_string(&mut contents) {
                         Err(_) => panic!("couldn't read {}", display),
-                        Ok(_) => println!("{:?}", min_skew(&contents))
+                        Ok(_) => println!("{:?}", f(&contents))
                     }
                 },
                 _ => exit(0)

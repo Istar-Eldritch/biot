@@ -1,3 +1,6 @@
+
+use hamming_distance;
+
 pub fn pattern_count(text: &str, pattern: &str) -> i32 {
     let mut count: i32 = 0;
 
@@ -11,6 +14,67 @@ pub fn pattern_count(text: &str, pattern: &str) -> i32 {
     }
 
     return count;
+}
+
+pub fn approx_pattern_count(text: &str, pattern: &str, distance: i32) -> i32 {
+    let mut count: i32 = 0;
+    if text.len() >= pattern.len() && pattern.len() > 0 {
+        for i in 0..(text.len() - pattern.len() + 1) {
+            let slice = &text[i..(i+pattern.len())];
+            if hamming_distance(slice, pattern) <= distance {
+                count += 1;
+            }
+        }
+    }
+    count
+}
+
+pub fn approx_pattern_index(text: &str, pattern: &str, distance: i32) -> Vec<i32> {
+    let mut result: Vec<i32> = vec!();
+    if pattern.len() > 0 && text.len() >= pattern.len() {
+        for i in 0..(text.len() - pattern.len() + 1) {
+            let slice = &text[i..(i + pattern.len())];
+            if hamming_distance(slice, pattern) <= distance {
+                result.push(i as i32);
+            }
+        }
+    }
+    result
+}
+
+#[cfg(test)]
+mod approx_pattern_index_test {
+    use super::approx_pattern_index;
+    use super::approx_pattern_count;
+
+    #[test]
+    fn on_empty() {
+        assert!(approx_pattern_index("abc", "", 2) == []);
+    }
+
+    #[test]
+    fn match_exact_on_distance_0() {
+        println!("{:?}", approx_pattern_index("abc", "abc", 0));
+        assert!(approx_pattern_index("abc", "abc", 0) == [0]);
+        assert!(approx_pattern_index("abc", "acc", 0) == []);
+    }
+
+    #[test]
+    fn match_when_distance_is_less() {
+        assert!(approx_pattern_index("abc", "acc", 1) == [0]);
+    }
+
+    #[test]
+    fn match_test() {
+        let result = approx_pattern_count(
+            "TGCACTTGTACAATCTCCCTTTACGGAGCTCCCTCATTCTACAACTCTAGAGGGATCCCATCAACTTCGCAAGTACGCGAGTTGTTTTTTGTGCTGAGAAAAAAACCGAAGCGTTAGCGGAGGCTAAGCATGAGGGGTAAGTTAAGCAGAAGCGGTCTATCCGTATTGCCTAAGAAGTCAGCAGCAAAGCCGAGTCCCTAGACCTGCAGAATTCTTCTGCCGTGGATCCTCTAAGAACGTCTATCTTCTGTTATATGCTCCCCCCCAGACGGCATTACAACACGGGGGCACGAGATTCATGGTAGGTCCTTGTGTGCGCTCCTCATCTGCTCCGCGGGGGGTCTCTGTACC",
+            "TCGCA",
+            3
+        );
+
+        println!("{:?}", result);
+        panic!("here");
+    }
 }
 
 #[cfg(test)]

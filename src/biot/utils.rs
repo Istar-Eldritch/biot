@@ -6,7 +6,7 @@ pub fn hamming_distance(str1: &str, str2: &str) ->i32 {
         let mut chars1 = str1.chars();
         let mut chars2 = str2.chars();
 
-        for i in 0..str1.len() {
+        for _ in 0..str1.len() {
             let c1 = chars1.next().unwrap();
             let c2 = chars2.next().unwrap();
             if c1 != c2 {
