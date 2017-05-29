@@ -1,14 +1,14 @@
-use biot::pattern_count;
+use biot::{pattern_count, approx_pattern_count, neighbors};
 
 pub fn frequent_words(text: &str, k: usize) -> Vec<String> {
     let mut frequents = vec!();
 
     if k > 0 && text.len() > k {
-        let mut count = vec![0; text.len() - k];
+        let mut count = vec!();
 
         for i in 0..(text.len() - k) {
             let word = &text[i..(i + k)];
-            count[i] = pattern_count(&text, &word);
+            count.push(pattern_count(&text, &word));
         }
 
         let max = count.iter().max().unwrap();
@@ -24,6 +24,34 @@ pub fn frequent_words(text: &str, k: usize) -> Vec<String> {
     }
 
     return frequents;
+}
+
+pub fn frequent_words_with_mismatches(text: &str, k: usize, d: i32) -> Vec<String> {
+    let mut frequents: Vec<String> = vec!();
+    let mut freq_array = vec!(0; 4usize.pow(k as u32));
+    let mut close = vec!(0; 4usize.pow(k as u32));
+
+    for i in 0..(text.len() - k) {
+        let neighborhood = neighbors(&text[i..(i + k)], d);
+        for p in neighborhood {
+            let index = pattern_to_number(&p);
+            close[index] = 1;
+        }
+    }
+    for i in 0..close.len() {
+        if close[i] == 1 {
+            let pattern = number_to_pattern(i, k);
+            freq_array[i] = approx_pattern_count(text, &pattern, d) as usize;
+        }
+    }
+    let max_count = freq_array.iter().max().unwrap();
+
+    for i in 0..freq_array.len() {
+        if &freq_array[i] == max_count {
+            frequents.push(number_to_pattern(i, k))
+        }
+    }
+    frequents
 }
 
 pub fn freq_array_words(text: &str, k: usize) -> Vec<String> {
@@ -203,6 +231,26 @@ mod sort_frequent_words_test {
     #[test]
     fn it_returns_multiple_frequent_words() {
         assert!(sort_frequent_words("atcatca", 2) == vec!["AT", "CA", "TC"])
+    }
+}
+
+#[cfg(test)]
+mod freq_words_with_mismatches {
+    use super::frequent_words_with_mismatches;
+
+    #[test]
+    fn it_returns_frequent_with_distance() {
+        let frequents = frequent_words_with_mismatches("ACGTTGCATGTCGCATGATGCATGAGAGCT", 4, 1);
+        assert!(frequents.contains(&String::from("ATGT")));
+        assert!(frequents.contains(&String::from("GATG")));
+        assert!(frequents.contains(&String::from("ATGC")));
+    }
+
+    #[test]
+    fn it_returns_frequent_with_distances() {
+        let frequents = frequent_words_with_mismatches("CACAGTAGGCGCCGGCACACACAGCCCCGGGCCCCGGGCCGCCCCGGGCCGGCGGCCGCCGGCGCCGGCACACCGGCACAGCCGTACCGGCACAGTAGTACCGGCCGGCCGGCACACCGGCACACCGGGTACACACCGGGGCGCACACACAGGCGGGCGCCGGGCCCCGGGCCGTACCGGGCCGCCGGCGGCCCACAGGCGCCGGCACAGTACCGGCACACACAGTAGCCCACACACAGGCGGGCGGTAGCCGGCGCACACACACACAGTAGGCGCACAGCCGCCCACACACACCGGCCGGCCGGCACAGGCGGGCGGGCGCACACACACCGGCACAGTAGTAGGCGGCCGGCGCACAGCC", 10, 2);
+        assert!(frequents.contains(&String::from("GCACACAGAC")));
+        assert!(frequents.contains(&String::from("GCGCACACAC")));
     }
 }
 

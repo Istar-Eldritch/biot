@@ -17,6 +17,31 @@ pub fn hamming_distance(str1: &str, str2: &str) ->i32 {
     distance
 }
 
+pub fn neighbors(pattern: &str, d: i32) -> Vec<String> {
+    if d == 0 {
+        return vec![String::from(pattern)]
+    } else if pattern.len() == 1 {
+        return vec!["A", "C", "G", "T"].into_iter().map(|x| String::from(x)).collect()
+    }
+    let mut neighborhood: Vec<String> = vec!();
+    let suffix_pattern = &pattern[1..];
+    let suffix_neighbors = neighbors(suffix_pattern, d);
+    for i in 0..suffix_neighbors.len() {
+        if hamming_distance(suffix_pattern, &suffix_neighbors[i]) < d {
+            for n in vec!["A", "C", "G", "T"] {
+                let mut str = String::from(n);
+                str.push_str(&suffix_neighbors[i]);
+                neighborhood.push(str)
+            }
+        } else {
+            let mut str = String::from(&pattern[..1]);
+            str.push_str(&suffix_neighbors[i]);
+            neighborhood.push(str);
+        }
+    }
+    neighborhood
+}
+
 #[cfg(test)]
 mod skew_test {
     use super::hamming_distance;

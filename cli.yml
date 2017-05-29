@@ -3,6 +3,13 @@ version: "0.1"
 author: Ruben Paz <me@ruben.io>
 about: Utility functions for bioinformatics
 subcommands:
+  - frequent_words:
+      args:
+        - file:
+            short: f
+            help: The file containing the text
+            required: true
+            takes_value: true
   - count:
       about: test if subcommands work
       args:
@@ -34,6 +41,10 @@ subcommands:
   - skew:
       about: computes skew of string
       args:
+        - index:
+            short: i
+            required: false
+            takes_value: true
         - type:
             short: t
             help: The type of skew

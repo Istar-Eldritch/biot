@@ -45,7 +45,6 @@ pub fn approx_pattern_index(text: &str, pattern: &str, distance: i32) -> Vec<i32
 #[cfg(test)]
 mod approx_pattern_index_test {
     use super::approx_pattern_index;
-    use super::approx_pattern_count;
 
     #[test]
     fn on_empty() {
@@ -62,18 +61,6 @@ mod approx_pattern_index_test {
     #[test]
     fn match_when_distance_is_less() {
         assert!(approx_pattern_index("abc", "acc", 1) == [0]);
-    }
-
-    #[test]
-    fn match_test() {
-        let result = approx_pattern_count(
-            "TGCACTTGTACAATCTCCCTTTACGGAGCTCCCTCATTCTACAACTCTAGAGGGATCCCATCAACTTCGCAAGTACGCGAGTTGTTTTTTGTGCTGAGAAAAAAACCGAAGCGTTAGCGGAGGCTAAGCATGAGGGGTAAGTTAAGCAGAAGCGGTCTATCCGTATTGCCTAAGAAGTCAGCAGCAAAGCCGAGTCCCTAGACCTGCAGAATTCTTCTGCCGTGGATCCTCTAAGAACGTCTATCTTCTGTTATATGCTCCCCCCCAGACGGCATTACAACACGGGGGCACGAGATTCATGGTAGGTCCTTGTGTGCGCTCCTCATCTGCTCCGCGGGGGGTCTCTGTACC",
-            "TCGCA",
-            3
-        );
-
-        println!("{:?}", result);
-        panic!("here");
     }
 }
 
