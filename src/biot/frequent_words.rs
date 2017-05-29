@@ -245,13 +245,6 @@ mod freq_words_with_mismatches {
         assert!(frequents.contains(&String::from("GATG")));
         assert!(frequents.contains(&String::from("ATGC")));
     }
-
-    #[test]
-    fn it_returns_frequent_with_distances() {
-        let frequents = frequent_words_with_mismatches("CACAGTAGGCGCCGGCACACACAGCCCCGGGCCCCGGGCCGCCCCGGGCCGGCGGCCGCCGGCGCCGGCACACCGGCACAGCCGTACCGGCACAGTAGTACCGGCCGGCCGGCACACCGGCACACCGGGTACACACCGGGGCGCACACACAGGCGGGCGCCGGGCCCCGGGCCGTACCGGGCCGCCGGCGGCCCACAGGCGCCGGCACAGTACCGGCACACACAGTAGCCCACACACAGGCGGGCGGTAGCCGGCGCACACACACACAGTAGGCGCACAGCCGCCCACACACACCGGCCGGCCGGCACAGGCGGGCGGGCGCACACACACCGGCACAGTAGTAGGCGGCCGGCGCACAGCC", 10, 2);
-        assert!(frequents.contains(&String::from("GCACACAGAC")));
-        assert!(frequents.contains(&String::from("GCGCACACAC")));
-    }
 }
 
 #[cfg(test)]
