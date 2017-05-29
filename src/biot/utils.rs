@@ -17,6 +17,23 @@ pub fn hamming_distance(str1: &str, str2: &str) ->i32 {
     distance
 }
 
+pub fn reverse_complement(str: &str) -> String {
+    let mut complement = String::new();
+    for i in 0..str.len() {
+        let symbol = &str[i..i+1];
+        let c_symbol = match symbol {
+            "A" => "T",
+            "C" => "G",
+            "G" => "C",
+            "T" => "A",
+            _ => unreachable!("Wops")
+        };
+        complement.push_str(&c_symbol);
+    }
+
+    complement.chars().rev().collect()
+}
+
 pub fn neighbors(pattern: &str, d: i32) -> Vec<String> {
     if d == 0 {
         return vec![String::from(pattern)]
@@ -60,4 +77,24 @@ mod skew_test {
     fn hamming_distance_diff() {
         assert!(hamming_distance("GGGCCGTTGGT", "GGACCGTTGAC") == 3);
     }
+}
+
+mod reverse_complement_test {
+    use super::reverse_complement;
+
+    #[test]
+    fn reverse_complement_0() {
+        assert_eq!(reverse_complement(""), "");
+    }
+
+    #[test]
+    fn reverse_complement_one() {
+        assert_eq!(reverse_complement("A"), "T");
+    }
+
+    #[test]
+    fn reverse_complement_complete() {
+        assert_eq!(reverse_complement("ACTG"), "CAGT");
+    }
+
 }
