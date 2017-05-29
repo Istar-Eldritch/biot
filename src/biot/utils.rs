@@ -79,6 +79,7 @@ mod skew_test {
     }
 }
 
+#[cfg(test)]
 mod reverse_complement_test {
     use super::reverse_complement;
 
