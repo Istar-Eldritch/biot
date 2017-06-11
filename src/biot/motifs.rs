@@ -19,13 +19,52 @@ fn find_k_mers(dna: Vec<String>, k: i32) -> Vec<String> {
     let mut k_mers: Vec<String> = vec!();
 
     for line in dna {
-        for i in 0..(line.len() - k as usize) {
+        for i in 0..(line.len() - k as usize + 1) {
             let k_mer = &line[i..(i + k as usize)];
             k_mers.push(String::from(k_mer));
         }
     }
 
     k_mers
+}
+
+fn find_consensus(dna: Vec<String>, k: i32) -> Vec<usize> {
+    let mut consensus_matrix = vec![vec![0; k as usize]; 4];
+    
+    let k_mers = find_k_mers(dna.clone(), k);
+
+    for k_mer in k_mers {
+        for i in 0..k_mer.len() {
+            let token = &k_mer[i..i+1];
+            let nucleotide_index = match token {
+                "A" => 0,
+                "C" => 1,
+                "G" => 2,
+                "T" => 3,
+                _ => unreachable!()
+            };
+
+            consensus_matrix[nucleotide_index][i] += 1;
+        }
+    }
+
+    let mut results = vec!();
+
+    for i in 0..k {
+        let mut max_nucleotide = 4;
+        let mut current_max = 0;
+        for n in 0..4 {
+            let n_count = consensus_matrix[n][i as usize];
+            if n_count > current_max {
+                max_nucleotide = n;
+                current_max = n_count;
+            }
+        }
+
+        results.push(max_nucleotide);
+    }
+
+    results
 }
 
 #[cfg(test)]
